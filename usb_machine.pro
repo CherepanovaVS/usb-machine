@@ -61,7 +61,8 @@ HEADERS = mainwindow.h \
     gsl/vector/view.h \
     gsl/vector/gsl_vector_double.h \
     gsl/vector/gsl_vector.h \
-    parser/parserspline.hpp
+    parser/parserspline.hpp\
+    igesimporter.h
 
 SOURCES = main.cpp \
     mainwindow.cpp \
@@ -98,8 +99,8 @@ SOURCES = main.cpp \
     gsl/linalg/tridiag.c \
     gsl/vector/view_source.c \
     gsl/vector/view.c \
-    parser/parserspline.cpp
-
+    parser/parserspline.cpp\
+    igesimporter.cpp
 
 target.path = ./usb_machine
 INSTALLS += target
@@ -113,6 +114,7 @@ win32 {
     LIBS += -lglew32
     LIBS += -L$$PWD/static/lib/ -lusb-1.0
 #    INCLUDEPATH += "C:/gnuwin32/include"
+    INCLUDEPATH += $$PWD/static/include
 } else {
     LIBS += -lusb-1.0
     LIBS += -lfl
@@ -125,3 +127,24 @@ LIBS += -L$$PWD/lib/ -lqwtplot3d
 INCLUDEPATH += $$PWD/static/include
 
 INCLUDEPATH += $$PWD/gsl
+
+
+
+INCLUDEPATH += $$PWD/opencascade-6.8.0/inc/
+LIBS += -L$$PWD/opencascade-6.8.0-build/out/lib \
+    -lTKIGES \
+    -lTKXSBase \
+    -lTKBool \
+    -lTKShHealing \
+    -lTKBO \
+    -lTKPrim \
+    -lTKTopAlgo \
+    -lTKGeomAlgo \
+    -lTKBRep \
+    -lTKGeomBase \
+    -lTKG3d \
+    -lTKG2d \
+    -lTKMath \
+    -lTKernel \
+    -lTKOffset \
+

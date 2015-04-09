@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "options.h"
+#include "usbconnection.h"
+#include "igesimporter.h"
+
 
 MainWindow::MainWindow() {
     mainWidget = new MainWidget(this);
@@ -262,28 +265,39 @@ bool MainWindow::maybeSave(QTextDocument * doc) {
     return true;
 }
 
+void loadIGESFile(const QString &fileName) {
+    IGESImporter importer(fileName);
+    bool result = importer.import();
+}
+
 
 void MainWindow::loadFile(const QString &fileName)
 {
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Application"),
-                             tr("Не могу открыть файл %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        return;
+    if (fileName.endsWith (".iges", Qt::CaseInsensitive) ||
+            fileName.endsWith (".igs", Qt::CaseInsensitive)) {
+        loadIGESFile(fileName);
+        statusBar()->showMessage(tr("IGES Файл загружен"), 2000);
+    } else {
+        QFile file(fileName);
+        if (!file.open(QFile::ReadOnly | QFile::Text)) {
+            QMessageBox::warning(this, tr("Application"),
+                                 tr("Не могу открыть файл %1:\n%2.")
+                                 .arg(fileName)
+                                 .arg(file.errorString()));
+            return;
+        }
+
+        QTextStream in(&file);
+#ifndef QT_NO_CURSOR
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
+        setCurrentFile(fileName, in.readAll());
+#ifndef QT_NO_CURSOR
+        QApplication::restoreOverrideCursor();
+#endif
+
+        statusBar()->showMessage(tr("Файл загружен"), 2000);
     }
-
-    QTextStream in(&file);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
-    setCurrentFile(fileName, in.readAll());
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
-
-    statusBar()->showMessage(tr("Файл загружен"), 2000);
 }
 
 bool MainWindow::saveFile(const QString &fileName) {
