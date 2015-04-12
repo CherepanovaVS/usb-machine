@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "options.h"
-#include "usbconnection.h"
+#include "usb/connection.h"
 #include "igesimporter.h"
 
 
@@ -265,9 +265,10 @@ bool MainWindow::maybeSave(QTextDocument * doc) {
     return true;
 }
 
-void loadIGESFile(const QString &fileName) {
+void MainWindow::importIGESFile(const QString &fileName) {
     IGESImporter importer(fileName);
     bool result = importer.import();
+    setCurrentFile("", importer.output);
 }
 
 
@@ -275,7 +276,7 @@ void MainWindow::loadFile(const QString &fileName)
 {
     if (fileName.endsWith (".iges", Qt::CaseInsensitive) ||
             fileName.endsWith (".igs", Qt::CaseInsensitive)) {
-        loadIGESFile(fileName);
+        importIGESFile(fileName);
         statusBar()->showMessage(tr("IGES Файл загружен"), 2000);
     } else {
         QFile file(fileName);

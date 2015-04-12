@@ -68,6 +68,8 @@ private:
     void setCurrentFile(const QString &fileName, const QString &text);
     void bindTextActions();
     QString strippedName(const QString &fullFileName);
+    void importIGESFile(const QString &fileName);
+
 
     MainWidget *mainWidget;
     QString curFile;

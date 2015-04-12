@@ -37,17 +37,14 @@ Qwt3D::Triple Track::operator() (double u, double /*v*/) {
          it != trackSegments.end();
          ++it) {
         if ((*it)->isTimeInSegment(u)) {
-            gsl_interp_accel *acc = gsl_interp_accel_alloc ();
-
             const gsl_spline *xSpline = (*it)->getXGSLSpline();
             const gsl_spline *ySpline = (*it)->getYGSLSpline();
             const gsl_spline *zSpline = (*it)->getZGSLSpline();
 
-            y = gsl_spline_eval (ySpline, u, acc);
-            z = gsl_spline_eval (zSpline, u, acc);
-            x = gsl_spline_eval (xSpline, u, acc);
+            y = gsl_spline_eval (ySpline, u, NULL);
+            z = gsl_spline_eval (zSpline, u, NULL);
+            x = gsl_spline_eval (xSpline, u, NULL);
 
-            gsl_interp_accel_free (acc);
             return Qwt3D::Triple(x, y, z);
         }
     }
@@ -74,11 +71,19 @@ std::string Track::getZName() {
     return zName;
 }
 
-double get_number_from_parser_value(Value value) {
+double get_first_number_from_parser_value(Value value) {
     if (value.getType () == value_types_number){
         return value.get_number ();
     } else {
         return (*(value.get_spline ()->get_nodes ().begin ()))->second;
+    }
+}
+
+double get_last_number_from_parser_value(Value value) {
+    if (value.getType () == value_types_number){
+        return value.get_number ();
+    } else {
+        return (*(value.get_spline ()->get_nodes ().rend ()))->second;
     }
 }
 
@@ -109,9 +114,9 @@ double Track::calculateAllWorkTime() {
 
 
         if (point_it == line->begin()) {
-            previousX = get_number_from_parser_value(currentX);
-            previousY = get_number_from_parser_value(currentY);
-            previousZ = get_number_from_parser_value(currentZ);
+            previousX = get_first_number_from_parser_value(currentX);
+            previousY = get_first_number_from_parser_value(currentY);
+            previousZ = get_first_number_from_parser_value(currentZ);
             if (currentX.getType () == value_types_number &&
                     currentY.getType () == value_types_number &&
                     currentZ.getType () == value_types_number) {
@@ -128,6 +133,10 @@ double Track::calculateAllWorkTime() {
                     totalTimeSeconds);
         trackSegments.push_back(currentSegment);
         totalTimeSeconds += currentSegment->getDeltaTimeSeconds();
+
+        previousX = get_last_number_from_parser_value(currentX);
+        previousY = get_last_number_from_parser_value(currentY);
+        previousZ = get_last_number_from_parser_value(currentZ);
     }
 
     return totalTimeSeconds;

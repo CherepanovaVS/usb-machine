@@ -46,7 +46,7 @@ double TrackSegment3D::getDeltaTimeSeconds() const {
 }
 
 bool TrackSegment3D::isTimeInSegment(double timeSeconds) const {
-    return startTimeSeconds < timeSeconds && timeSeconds < startTimeSeconds + maxDeltaTimeSeconds;
+    return startTimeSeconds <= timeSeconds && timeSeconds < startTimeSeconds + maxDeltaTimeSeconds;
 }
 
 void TrackSegment3D::initMaxDeltaTimeSeconds() {
