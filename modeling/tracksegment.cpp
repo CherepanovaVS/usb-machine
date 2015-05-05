@@ -2,8 +2,7 @@
 
 #include "splinesegment.h"
 #include "gsl/gsl_math.h"
-#include "gsl/gsl_spline.h"
-#include "gsl/gsl_statistics_double.h"
+#include "interpolation/gsl_spline.h"
 
 TrackSegment::TrackSegment(double maxVelocity,
                            double velocityFactor,
