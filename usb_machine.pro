@@ -32,7 +32,6 @@ HEADERS = mainwindow.h \
     parser/ast.hpp \
     parser/parser_value.hpp \
     parser/parsertypes.hpp \
-    parser/spline.hpp \
     usb/connection.h \
     usb/trackdataformatter.h \
     usb/dataformatter.h \
@@ -61,7 +60,8 @@ HEADERS = mainwindow.h \
     gsl/linalg/gsl_linalg.h \
     gsl/vector/view.h \
     gsl/vector/gsl_vector_double.h \
-    gsl/vector/gsl_vector.h
+    gsl/vector/gsl_vector.h \
+    parser/parserspline.hpp
 
 SOURCES = main.cpp \
     mainwindow.cpp \
@@ -80,7 +80,6 @@ SOURCES = main.cpp \
     parser/parsertypes.cpp \
     parser/ast.cpp \
     parser/parser_value.cpp \
-    parser/spline.cpp \
     usb/connection.cpp \
     usb/trackdataformatter.cpp \
     usb/dataformatter.cpp \
@@ -98,7 +97,8 @@ SOURCES = main.cpp \
     gsl/interpolation/accel.c \
     gsl/linalg/tridiag.c \
     gsl/vector/view_source.c \
-    gsl/vector/view.c
+    gsl/vector/view.c \
+    parser/parserspline.cpp
 
 
 target.path = ./usb_machine

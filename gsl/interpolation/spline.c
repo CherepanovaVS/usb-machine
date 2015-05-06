@@ -1,17 +1,17 @@
 /* interpolation/spline.c
- * 
+ *
  * Copyright (C) 2001, 2007 Brian Gough
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -23,25 +23,26 @@
 #include <interpolation/gsl_interp.h>
 #include <interpolation/gsl_spline.h>
 
+
 gsl_spline *
 gsl_spline_alloc (const gsl_interp_type * T, size_t size)
 {
   gsl_spline * spline = (gsl_spline *) malloc (sizeof(gsl_spline));
-  
+
   if (spline == NULL)
     {
-      GSL_ERROR_NULL ("failed to allocate space for spline struct", 
+      GSL_ERROR_NULL ("failed to allocate space for spline struct",
                       GSL_ENOMEM);
     }
-  
+
   spline->interp = gsl_interp_alloc (T, size);
-  
+
   if (spline->interp == NULL)
     {
-      free (spline);          
+      free (spline);
       GSL_ERROR_NULL ("failed to allocate space for interp", GSL_ENOMEM);
     };
-    
+
   spline->x = (double *) malloc (size * sizeof(double));
 
   if (spline->x == NULL)
@@ -60,7 +61,7 @@ gsl_spline_alloc (const gsl_interp_type * T, size_t size)
       free(spline);
       GSL_ERROR_NULL ("failed to allocate space for y", GSL_ENOMEM);
     }
-  
+
   spline->size = size;
 
   return spline;
@@ -73,7 +74,7 @@ gsl_spline_init (gsl_spline * spline, const double x_array[], const double y_arr
     {
       GSL_ERROR ("data must match size of spline object", GSL_EINVAL);
     }
-  
+
   memcpy (spline->x, x_array, size * sizeof(double));
   memcpy (spline->y, y_array, size * sizeof(double));
 
@@ -106,11 +107,11 @@ gsl_spline_free (gsl_spline * spline)
 }
 
 int
-gsl_spline_eval_e (const gsl_spline * spline, 
+gsl_spline_eval_e (const gsl_spline * spline,
                    double x,
                    gsl_interp_accel * a, double *y)
 {
-  return gsl_interp_eval_e (spline->interp, 
+  return gsl_interp_eval_e (spline->interp,
                             spline->x, spline->y,
                             x, a, y);
 }
@@ -120,7 +121,7 @@ gsl_spline_eval (const gsl_spline * spline,
                  double x,
                  gsl_interp_accel * a)
 {
-  return gsl_interp_eval (spline->interp, 
+  return gsl_interp_eval (spline->interp,
                           spline->x, spline->y,
                           x, a);
 }
@@ -132,7 +133,7 @@ gsl_spline_eval_deriv_e (const gsl_spline * spline,
                          gsl_interp_accel * a,
                          double *dydx)
 {
-  return gsl_interp_eval_deriv_e (spline->interp, 
+  return gsl_interp_eval_deriv_e (spline->interp,
                                   spline->x, spline->y,
                                   x, a, dydx);
 }
@@ -142,7 +143,7 @@ gsl_spline_eval_deriv (const gsl_spline * spline,
                        double x,
                        gsl_interp_accel * a)
 {
-  return gsl_interp_eval_deriv (spline->interp, 
+  return gsl_interp_eval_deriv (spline->interp,
                                 spline->x, spline->y,
                                 x, a);
 }
@@ -154,7 +155,7 @@ gsl_spline_eval_deriv2_e (const gsl_spline * spline,
                           gsl_interp_accel * a,
                           double * d2)
 {
-  return gsl_interp_eval_deriv2_e (spline->interp, 
+  return gsl_interp_eval_deriv2_e (spline->interp,
                                    spline->x, spline->y,
                                    x, a, d2);
 }
@@ -164,7 +165,7 @@ gsl_spline_eval_deriv2 (const gsl_spline * spline,
                         double x,
                         gsl_interp_accel * a)
 {
-  return gsl_interp_eval_deriv2 (spline->interp, 
+  return gsl_interp_eval_deriv2 (spline->interp,
                                  spline->x, spline->y,
                                  x, a);
 }
@@ -176,7 +177,7 @@ gsl_spline_eval_integ_e (const gsl_spline * spline,
                          gsl_interp_accel * acc,
                          double * result)
 {
-  return gsl_interp_eval_integ_e (spline->interp, 
+  return gsl_interp_eval_integ_e (spline->interp,
                                   spline->x, spline->y,
                                   a, b, acc, result);
 }
@@ -187,7 +188,7 @@ gsl_spline_eval_integ (const gsl_spline * spline,
                        double a, double b,
                        gsl_interp_accel * acc)
 {
-  return gsl_interp_eval_integ (spline->interp, 
+  return gsl_interp_eval_integ (spline->interp,
                                 spline->x, spline->y,
                                 a, b, acc);
 }
